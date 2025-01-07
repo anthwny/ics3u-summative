@@ -1,6 +1,8 @@
 <script setup>
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
+import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "../firebase";
 import { RouterLink, useRouter } from 'vue-router';
 import { useStore } from "../store";
 import { ref } from 'vue';
@@ -13,16 +15,31 @@ const email = ref('');
 const password = ref('');
 const confirm = ref('');
 
+async function registerByEmail() {
+  try {
+    const user = (await createUserWithEmailAndPassword(auth, email.value, password.value)).user;
+    await updateProfile(user, { displayName: `${firstName.value} ${lastName.value}` });
+    store.user = user;
+    router.push("/movies");
+  } catch (error) {
+    console.error(error)
+    alert("There was an error creating a user with email!");
+  }
+}
+
+async function registerByGoogle() {
+  try {
+    const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
+    store.user = user;
+    router.push("/movies");
+  } catch (error) {
+    alert("There was an error creating a user with Google!");
+  }
+}
+
 const checkPasswords = () => {
   if (password.value === confirm.value) {
-    store.addAccount(email.value, {
-      firstName: firstName.value,
-      lastName: lastName.value,
-      email: email.value,
-      password: password.value
-    });
-    store.currentUserEmail = email.value
-    router.push("/movies");
+    registerByEmail();
   } 
   else {
     alert("Your passwords do not match");
@@ -54,6 +71,9 @@ const checkPasswords = () => {
           </div>
           <div class="form-group">
             <button type="submit" class="button register">Register</button>
+          </div>
+          <div class="form-group">
+            <button @click="registerByGoogle()" class="button register">Register by Google</button>
           </div>
         </form>
       </div>
