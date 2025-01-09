@@ -2,17 +2,22 @@
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 import { RouterLink, useRouter } from 'vue-router';
+import { auth } from "../firebase";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { ref } from 'vue';
+import { useStore } from "../store/index";
 
+const store = useStore();
 const router = useRouter();
+const email = ref('');
 const password = ref('');
 
 const loginByEmail = async () => {
   try {
+    console.log(email.value)
     const user = (await signInWithEmailAndPassword(auth, email.value, password.value)).user;
     store.user = user;
-    router.push("/movies/all");
+    router.push("/movies");
   } catch (error) {
     console.log(error);
     alert("There was an error signing in with email!");
@@ -23,7 +28,7 @@ const loginByGoogle = async () => {
   try {
     const user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
     store.user = user;
-    router.push("/movies/all");
+    router.push("/movies");
   } catch (error) {
     alert("There was an error signing in with Google!");
   }
@@ -38,7 +43,7 @@ const loginByGoogle = async () => {
         <h2>Login to Your Account</h2>
         <form @submit.prevent="loginByEmail()">
           <div class="form-group">
-            <input type="email" placeholder="Email" class="input-field" required />
+            <input v-model:="email" type="email" placeholder="Email" class="input-field" required />
           </div>
           <div class="form-group">
             <input v-model:="password" type="password" placeholder="Password" class="input-field" required />
