@@ -18,6 +18,11 @@ function getMovieDetails(id) {
     router.push(`/movies/${id}`)
 }
 
+const addToCart = () => {
+  store.cart.set(route.params.id, { title: response.data.original_title, url: response.data.poster_path })
+  localStorage.setItem(`cart_${store.user.email}`, JSON.stringify(Object.fromEntries(store.cart)));
+}
+
 onMounted(async () => {
     response.value = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&with_genres=${selectedGenre.value}`);
 })
@@ -35,7 +40,7 @@ onMounted(async () => {
                     class="movie-poster" />
                 <p class="movie-title">{{ movie.title }}</p>
                 <button class="btn btn-success"
-                    @click.stop="store.addToCart(movie.id, { title: movie.title, url: movie.poster_path })">
+                    @click.stop="addToCart(movie.id, { title: movie.title, url: movie.poster_path })">
                     {{ store.cart.has(movie.id) ? "In Cart" : "Buy" }}
                 </button>
             </div>

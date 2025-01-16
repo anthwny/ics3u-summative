@@ -14,9 +14,10 @@ const currentUserFirstName = computed(() => {
     return userAccount ? userAccount.firstName : '';
 });
 
-function logout() {
-    store.currentUserEmail = "";
-    store.cart.clear();
+const logout = () => {
+  store.user = null;
+  signOut(auth);
+  router.push(`/`);
 }
 
 </script>

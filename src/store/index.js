@@ -1,11 +1,14 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 
 export const useStore = defineStore('store', () => {
-    const accounts = ref(new Map());
     const currentUserEmail = ref("");
-    const email = ref("");
     const cart = ref(new Map());
+    
+/*
+    const accounts = ref(new Map());
     const firstName = ref("");
     const lastName = ref("");
 
@@ -25,6 +28,21 @@ export const useStore = defineStore('store', () => {
         firstName.value = newFirstName;
         lastName.value = newLastName;
     };
-
-    return { accounts, currentUserEmail, email, cart, firstName, lastName, addAccount, addToCart, removeFromCart, updateNames };
+*/
+    return { currentUserEmail, cart };
 });
+
+export const userAuthorized = new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, currentUserEmail => {
+      try {
+        const store = useStore();
+        store.currentUserEmail = currentUserEmail;
+        const storedCart = localStorage.getItem(`cart_${store.currentUserEmail}`);
+  
+        store.cart = storedCart ? new Map(Object.entries(JSON.parse(storedCart))) : new Map();
+        resolve();
+      } catch (error) {
+        reject();
+      }
+    })
+  })
