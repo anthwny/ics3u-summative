@@ -19,14 +19,25 @@ function getMovieDetails(id) {
     router.push(`/movies/${id}`)
 }
 
+function addToCart(movie, title, url) {
+    store.cart.set(movie, { title: title, url: url })
+    localStorage.setItem(`cart_${store.user.email}`, JSON.stringify(Object.fromEntries(store.cart)));
+}
+
 onMounted(async () => {
     response.value = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&with_genres=${selectedGenre.value}`);
-})
+    const storedCart = localStorage.getItem(`cart_${store.user.email}`);
+    if (storedCart) {
+        store.cart = new Map(Object.entries(JSON.parse(storedCart)));
+    }
 
-function addToCart(movie, title, url) {
-  store.cart.set(movie, { title: title, url: url })
-  localStorage.setItem(`cart_${store.user.email}`, JSON.stringify(Object.fromEntries(store.cart)));
-}
+});
+
+const isInCart = (movieId) => {
+    return store.cart.has(movieId);
+};
+
+console.log(store.cart)
 </script>
 
 <template>
@@ -42,7 +53,7 @@ function addToCart(movie, title, url) {
                 <p class="movie-title">{{ movie.title }}</p>
                 <button class="btn btn-success"
                     @click.stop="addToCart(movie.id, { title: movie.title, url: movie.poster_path })">
-                    {{ store.cart.has(movie.id) ? "In Cart" : "Buy" }}
+                    {{ isInCart(movie.id) ? "In Cart" : "Buy" }}
                 </button>
             </div>
         </div>

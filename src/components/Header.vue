@@ -7,17 +7,10 @@ import { auth } from '../firebase';
 
 const route = useRoute();
 const store = useStore();
-let currentUserEmail = ''
+let currentUserEmail = store.user?.email || '';
 
 const current = computed(() => route.path);
 const movieRoute = computed(() => route.name === "movie" || route.path.startsWith('/movies/'));
-
-try {
-    currentUserEmail = store.user.email;
-} catch (error) {
-    console.log(error)
-    console.log('No email')
-  }
 
 const currentUserFirstName = computed(() => {
     const userAccount = currentUserEmail;

@@ -19,10 +19,31 @@ onMounted(() => {
   email.value = store.user.email || '';
 });
 
+function checkSignInMethod() {
+  const user = auth.currentUser;
+
+  if (user) {
+    const providers = user.providerData;
+
+    providers.forEach((provider) => {
+      if (provider.providerId === "password") {
+        console.log("User signed in with email/password.");
+      } else if (provider.providerId === "google.com") {
+        alert("You are signed in through Google. You will be redirected back to the movies page.");
+        router.push("/movies");
+      } 
+    });
+  } else {
+    console.error("No user is signed in.");
+  }
+}
+
 function saveChanges() {
   updateProfile(user, { displayName: `${firstName.value} ${lastName.value}` });
   alert('Changes saved');
 }
+
+checkSignInMethod()
 </script>
 
 <template>
