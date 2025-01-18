@@ -4,18 +4,32 @@ import Footer from '../components/Footer.vue'
 import { useStore } from '../store';
 
 const store = useStore();
+
+function removeFromCart(movie) {
+    store.cart.delete(movie);
+    localStorage.setItem(
+      `cart_${store.user.email}`,
+      JSON.stringify(Object.fromEntries(store.cart))
+    );
+  }
+
+function checkout() {
+    console.log('Proceeding to checkout with items:', Array.from(store.cart));
+  }
+
 </script>
 
 <template>
   <Header />
   <div class="cart">
-        <h1>Shopping Cart</h1>
-        <div class="item" v-for="([key, value]) in store.cart">
-            <img :src="`https://image.tmdb.org/t/p/w500${value.url}`" />
-            <h1>{{ value.title }}</h1>
-            <button @click="store.cart.delete(key)">Remove</button>
-        </div>
+    <h1>Shopping Cart</h1>
+    <div class="item" v-for="[key, value] in Array.from(store.cart)" :key="key">
+      <img :src="`https://image.tmdb.org/t/p/w500${value.url}`" />
+      <h1>{{ value.title }}</h1>
+      <button @click="store.cart.delete(key)">Remove</button>
     </div>
+    <button class="btn btn-success" @click="checkout">Checkout</button>
+  </div>
   <Footer />
 </template>
 
@@ -79,5 +93,3 @@ button:hover {
   background-color: #428eaa;
 }
 </style>
-
-

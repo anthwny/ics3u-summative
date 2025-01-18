@@ -2,35 +2,26 @@
 import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
 import { useStore } from '../store';
-import { ref, computed, onMounted } from 'vue';
+import { auth } from "../firebase";
+import { updateProfile } from "firebase/auth";
+import { ref, onMounted } from 'vue';
 
 const store = useStore();
-
-const currentUserDetails = computed(() => {
-  return store.accounts.get(store.currentUserEmail) || {};
-});
-
 const firstName = ref('');
 const lastName = ref('');
 const email = ref('');
+let user = auth.currentUser;
 
 onMounted(() => {
-  firstName.value = currentUserDetails.value.firstName || '';
-  lastName.value = currentUserDetails.value.lastName || '';
-  email.value = store.currentUserEmail || '';
+  const fullName = store.user.displayName.split(" ")
+  firstName.value = fullName[0] || '';
+  lastName.value = fullName[1] || '';
+  email.value = store.user.email || '';
 });
 
 function saveChanges() {
-  const userAccount = store.accounts.get(store.currentUserEmail);
-
-  if (userAccount) {
-    userAccount.firstName = firstName.value;
-    userAccount.lastName = lastName.value;
-
-    store.accounts.set(store.currentUserEmail, userAccount);
-
-    alert('Changes saved');
-  }
+  updateProfile(user, { displayName: `${firstName.value} ${lastName.value}` });
+  alert('Changes saved');
 }
 </script>
 

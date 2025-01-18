@@ -1,10 +1,11 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from 'vue';
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useStore } from "../store";
 
 const props = defineProps(["genres"]);
+const route = useRoute();
 const router = useRouter();
 const selectedGenre = ref(28);
 const response = ref(null);
@@ -18,14 +19,14 @@ function getMovieDetails(id) {
     router.push(`/movies/${id}`)
 }
 
-const addToCart = () => {
-  store.cart.set(route.params.id, { title: response.data.original_title, url: response.data.poster_path })
-  localStorage.setItem(`cart_${store.user.email}`, JSON.stringify(Object.fromEntries(store.cart)));
-}
-
 onMounted(async () => {
     response.value = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&with_genres=${selectedGenre.value}`);
 })
+
+function addToCart(movie, title, url) {
+  store.cart.set(movie, { title: title, url: url })
+  localStorage.setItem(`cart_${store.user.email}`, JSON.stringify(Object.fromEntries(store.cart)));
+}
 </script>
 
 <template>
