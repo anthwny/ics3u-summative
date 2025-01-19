@@ -33,7 +33,7 @@ function checkSignInMethod() {
       } else if (provider.providerId === "google.com") {
         alert("You are signed in through Google. You will be redirected back to the movies page.");
         router.push("/movies");
-      } 
+      }
     });
   } else {
     console.error("No user is signed in.");
@@ -104,7 +104,7 @@ checkSignInMethod()
   border: 1px solid #ccc;
   margin-bottom: 15px;
   transition: border-color 0.3s;
-  color:#ccc
+  color: #ccc
 }
 
 .input-field:focus {

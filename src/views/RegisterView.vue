@@ -22,7 +22,6 @@ async function registerByEmail() {
     store.user = user;
     router.push("/movies");
   } catch (error) {
-    console.error(error)
     alert("There was an error creating a user with email!");
   }
 }
@@ -40,7 +39,7 @@ async function registerByGoogle() {
 const checkPasswords = () => {
   if (password.value === confirm.value) {
     registerByEmail();
-  } 
+  }
   else {
     alert("Your passwords do not match");
   }
@@ -71,8 +70,6 @@ const checkPasswords = () => {
           </div>
           <div class="form-group">
             <button type="submit" class="button register">Register</button>
-          </div>
-          <div class="form-group">
             <button @click="registerByGoogle()" class="button register">Register by Google</button>
           </div>
         </form>
@@ -133,6 +130,10 @@ const checkPasswords = () => {
 .register:hover {
   background-color: #428eaa;
   transform: scale(1.05);
+}
+
+button {
+  margin-left: 10px;
 }
 
 @media (max-width: 600px) {

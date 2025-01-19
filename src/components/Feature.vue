@@ -27,7 +27,7 @@ onMounted(async () => {
             </div>
         </div>
     </div>
-    <div class="movie-gallery"> 
+    <div class="movie-gallery">
     </div>
 </template>
 

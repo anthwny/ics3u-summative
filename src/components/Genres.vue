@@ -24,8 +24,8 @@ function addToCart(movie, title, url) {
         return;
     }
     else {
-    store.cart.set(movie, { title: title, url: url })
-    localStorage.setItem(`cart_${store.user.email}`, JSON.stringify(Object.fromEntries(store.cart)));
+        store.cart.set(movie, { title: title, url: url })
+        localStorage.setItem(`cart_${store.user.email}`, JSON.stringify(Object.fromEntries(store.cart)));
     }
 }
 
@@ -37,8 +37,6 @@ onMounted(async () => {
     }
 
 });
-
-console.log(store.cart)
 </script>
 
 <template>

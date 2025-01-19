@@ -14,12 +14,10 @@ const password = ref('');
 
 const loginByEmail = async () => {
   try {
-    console.log(email.value)
     const user = (await signInWithEmailAndPassword(auth, email.value, password.value)).user;
     store.user = user;
     router.push("/movies");
   } catch (error) {
-    console.log(error);
     alert("There was an error signing in with email!");
   }
 };
@@ -48,8 +46,10 @@ const loginByGoogle = async () => {
           <div class="form-group">
             <input v-model:="password" type="password" placeholder="Password" class="input-field" required />
           </div>
-          <button type="submit" class="button login">Login</button>
-          <button @click="loginByGoogle()" type="submit" class="button login">Login by Google</button>
+          <div>
+            <button type="submit" class="button login">Login</button>
+            <button @click="loginByGoogle()" type="submit" class="button login">Login by Google</button>
+          </div>
         </form>
       </div>
     </div>
@@ -111,6 +111,10 @@ const loginByGoogle = async () => {
 .login:hover {
   background-color: #428eaa;
   transform: scale(1.05);
+}
+
+button {
+  margin-left: 10px;
 }
 
 @media (max-width: 600px) {
