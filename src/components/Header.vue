@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue';
-import { RouterLink, useRoute } from 'vue-router';
+import { computed, onMounted } from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { signOut } from 'firebase/auth';
 import { useStore } from '../store';
 import { auth } from '../firebase';
 
 const route = useRoute();
+const router = useRouter();
 const store = useStore();
 let currentUserEmail = store.user?.email || '';
 

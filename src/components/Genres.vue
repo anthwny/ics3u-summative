@@ -20,8 +20,13 @@ function getMovieDetails(id) {
 }
 
 function addToCart(movie, title, url) {
+    if (store.cart.has(String(movie)) || store.cart.has(movie)) {
+        return;
+    }
+    else {
     store.cart.set(movie, { title: title, url: url })
     localStorage.setItem(`cart_${store.user.email}`, JSON.stringify(Object.fromEntries(store.cart)));
+    }
 }
 
 onMounted(async () => {
@@ -32,10 +37,6 @@ onMounted(async () => {
     }
 
 });
-
-const isInCart = (movieId) => {
-    return store.cart.has(movieId);
-};
 
 console.log(store.cart)
 </script>
@@ -53,7 +54,7 @@ console.log(store.cart)
                 <p class="movie-title">{{ movie.title }}</p>
                 <button class="btn btn-success"
                     @click.stop="addToCart(movie.id, { title: movie.title, url: movie.poster_path })">
-                    {{ isInCart(movie.id) ? "In Cart" : "Buy" }}
+                    {{ store.cart.has(String(movie.id)) || store.cart.has(movie.id) ? "In Cart" : "Buy" }}
                 </button>
             </div>
         </div>

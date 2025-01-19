@@ -2,10 +2,12 @@
 import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
 import { useStore } from '../store';
+import { useRouter } from 'vue-router';
 import { auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
 import { ref, onMounted } from 'vue';
 
+const router = useRouter();
 const store = useStore();
 const firstName = ref('');
 const lastName = ref('');

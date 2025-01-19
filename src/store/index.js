@@ -11,21 +11,23 @@ return { cart, user };
 });
 
 export const userAuthorized = new Promise((resolve, reject) => {
-    onAuthStateChanged(auth, user => {
-      try {
-        const store = useStore();
+  onAuthStateChanged(auth, (user) => {
+    try {
+      const store = useStore();
+
+      if (user) {
         store.user = user;
         const storedCart = localStorage.getItem(`cart_${store.user.email}`);
-
-        if (!user) {
-            reject(new Error("User not authenticated"));
-            return;
-          }
-  
         store.cart = storedCart ? new Map(Object.entries(JSON.parse(storedCart))) : new Map();
+        console.log("User is authorized and data is loaded.");
         resolve();
-      } catch (error) {
-        reject();
+      } else {
+        resolve();
       }
-    })
-  })
+    } catch (error) {
+      console.error("Error during authorization:", error);
+      reject(error);
+    }
+  });
+});
+  

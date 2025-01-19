@@ -26,15 +26,25 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-    await userAuthorized;
-
-    const store = useStore();
-
-    if (!store.user && to.meta.auth) {
-        next("/login");
-    } else {
-        next();
+    try {
+      await userAuthorized;
+  
+      const store = useStore();
+      if (!store.user && to.meta.auth) {
+        console.log("User is not logged in. Redirecting to login page.");
+        router.push("/login");
+      }
+  
+      console.log("User is authorized. Proceeding to the route.");
+      next();
+    } catch (error) {
+      console.log(error)
+      console.error("Authorization failed or user not logged in:", error);
+      if (to.meta.auth) {
+        router.push("/login");
+      }
+      next();
     }
-});
+  });
 
 export default router;
